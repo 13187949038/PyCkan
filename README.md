@@ -8,7 +8,7 @@
 
 > 注意：您是否正在寻找名为 CKAN 的开放数据门户软件？如果是这样，可以[在此处](https://github.com/ckan/ckan)找到他们的 GitHub 存储库。
 
-​	CKAN的[主线](https://github.com/KSP-CKAN/CKAN)由于采用 C# 进行编写，无法在其他平台（如Linux）上很好的运行，代码要求编译故难以维护，PyCkan的目的是兼容 [CKAN数据规范](https://github.com/KSP-CKAN/CKAN/blob/master/Spec.md)，并能够在各平台上提供原生可执行程序（使用 *Nuitka* 进行打包）。
+​	CKAN的[主线](https://github.com/KSP-CKAN/CKAN)由于采用 C# 进行编写，在其他平台（如Linux）上往往需要通过mono等方式运行，代码要求编译故难以维护，PyCkan的目的是兼容 [CKAN数据规范](https://github.com/KSP-CKAN/CKAN/blob/master/Spec.md)，并能够在各平台上提供原生可执行程序（使用 *Nuitka* 进行打包）。
 
 ​	请注意，PyCkan的目的并不是取代CKAN主线，PyCkan只是为CKAN主线提供了另一种高效的模组安装方式。
 
