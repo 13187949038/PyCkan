@@ -14,19 +14,25 @@ from config_loader import config
 
 # 获取元数据
 def get_metadata():
-    tempdir = tempfile.TemporaryDirectory('pyckan_metadata').name
+    # tempdir = tempfile.TemporaryDirectory('pyckan_metadata').name
+    tempdir = config.Config.load().cache_dir
     
     try:
         os.makedirs(tempdir)
+        exists = False
     except:
-        pass
+        exists = True
     
     configs = config.Config.load()
 
     for source in configs.sources:
-        print(f'Downloading {source.url}')
-        git.Repo.clone_from(source.url, os.path.join(tempdir, source.name))
-        print(f'Downloaded {source.url}')
+        # 不存在
+        if not exists:
+            print(f'Downloading {source.url}')
+            git.Repo.clone_from(source.url, os.path.join(tempdir, source.name))
+            print(f'Downloaded {source.url}')
+        else:
+            print(f'Skip to download {source.url}')
         
         # with zipfile.ZipFile(os.path.join(tempdir, source.name + '.zip')) as zip:
             # zip.extractall(os.path.join(tempdir, source.name))
