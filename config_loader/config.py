@@ -1,3 +1,4 @@
+import json
 import re
 from typing import List
 
@@ -19,6 +20,13 @@ class Source:
             'url': self.url,
             'check': self.url_check()
         }
+
+    @staticmethod
+    def load(data: dict):
+        return Source(
+            name=data['name'],
+            url=data['url']
+        )
 
 
 class Config(dict):
@@ -57,12 +65,31 @@ class Config(dict):
             # 赋值
             self.sources = __value
 
+        self.save()
+
     def dump(self):
         return {
             'refresh_data_on_launch': self.refresh_data_on_launch,
             'cache_dir': self.cache_dir,
             'sources': [x.dump() for x in self.sources]
         }
+
+    def save(self):
+        with open('./pyckan.config.json', 'w', encoding='utf-8') as f:
+            f.write(
+                json.dumps(self.dump())
+            )
+        
+    @staticmethod
+    def load():
+        with open('./pyckan.config.json', 'r', encoding='utf-8') as f:
+            data = json.loads(f.read())
+            
+            return Config(
+                refresh_data_on_launch=data['refresh_data_on_launch'],
+                cache_dir=data['cache_dir'],
+                sources=[Source.load(src) for src in data['sources']]
+            )
 
 
 if '__main__' == __name__:
