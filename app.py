@@ -1,7 +1,24 @@
 import parser.meta
+import time
+import click
+
+mod_file_content = []
 
 
-# metadata_dirs = [parser.meta.get_metadata()]
+@click.group(help='基于命令行的 Kerbal Space Program 模组管理器，兼容 CKAN')
+def cli():
+    pass
 
-# for dir in metadata_dirs:
-parser.meta.analyse_metadata('/tmp/tmpcpigmiydpyckan_metadata/default')
+
+@cli.group(help='mod 管理')
+def mod():
+    pass
+
+
+@cli.group(help='游戏管理')
+def game():
+    pass
+
+
+if '__main__' == __name__:
+    cli()
