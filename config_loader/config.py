@@ -37,9 +37,9 @@ class Config(dict):
         self.sources: list[Source] = sources
 
         # url 规范性检查
-        for source in sources:
-            if source.url_check() == False:
-                raise ValueError('不符合规范的 URL')
+        # for source in sources:
+            # if source.url_check() == False:
+                # raise ValueError('不符合规范的 URL')
 
     def __getitem__(self, __key):
         if __key == 'refresh_data_on_launch':
@@ -82,14 +82,21 @@ class Config(dict):
         
     @staticmethod
     def load():
-        with open('./pyckan.config.json', 'r', encoding='utf-8') as f:
-            data = json.loads(f.read())
-            
-            return Config(
-                refresh_data_on_launch=data['refresh_data_on_launch'],
-                cache_dir=data['cache_dir'],
-                sources=[Source.load(src) for src in data['sources']]
-            )
+        try:
+            with open('./pyckan.config.json', 'r', encoding='utf-8') as f:
+                data = json.loads(f.read())
+                
+                return Config(
+                    refresh_data_on_launch=data['refresh_data_on_launch'],
+                    cache_dir=data['cache_dir'],
+                    sources=[Source.load(src) for src in data['sources']]
+                )
+        except FileNotFoundError or KeyError:
+            Config(
+                refresh_data_on_launch=True,
+                cache_dir='/tmp',
+                sources=[]
+            ).save()
 
 
 if '__main__' == __name__:

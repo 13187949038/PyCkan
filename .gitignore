@@ -128,3 +128,4 @@ dmypy.json
 .vscode/
 
 pyckan.config.json
+db.json
