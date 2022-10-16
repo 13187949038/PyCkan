@@ -1,3 +1,4 @@
+import json
 import re
 from typing import List
 
@@ -20,6 +21,13 @@ class Source:
             'check': self.url_check()
         }
 
+    @staticmethod
+    def load(data: dict):
+        return Source(
+            name=data['name'],
+            url=data['url']
+        )
+
 
 class Config(dict):
     def __init__(self, refresh_data_on_launch: bool, cache_dir: str, sources: list[Source]):
@@ -29,9 +37,9 @@ class Config(dict):
         self.sources: list[Source] = sources
 
         # url 规范性检查
-        for source in sources:
-            if source.url_check() == False:
-                raise ValueError('不符合规范的 URL')
+        # for source in sources:
+            # if source.url_check() == False:
+                # raise ValueError('不符合规范的 URL')
 
     def __getitem__(self, __key):
         if __key == 'refresh_data_on_launch':
@@ -57,12 +65,38 @@ class Config(dict):
             # 赋值
             self.sources = __value
 
+        self.save()
+
     def dump(self):
         return {
             'refresh_data_on_launch': self.refresh_data_on_launch,
             'cache_dir': self.cache_dir,
             'sources': [x.dump() for x in self.sources]
         }
+
+    def save(self):
+        with open('./pyckan.config.json', 'w', encoding='utf-8') as f:
+            f.write(
+                json.dumps(self.dump())
+            )
+        
+    @staticmethod
+    def load():
+        try:
+            with open('./pyckan.config.json', 'r', encoding='utf-8') as f:
+                data = json.loads(f.read())
+                
+                return Config(
+                    refresh_data_on_launch=data['refresh_data_on_launch'],
+                    cache_dir=data['cache_dir'],
+                    sources=[Source.load(src) for src in data['sources']]
+                )
+        except FileNotFoundError or KeyError:
+            Config(
+                refresh_data_on_launch=True,
+                cache_dir='/tmp',
+                sources=[]
+            ).save()
 
 
 if '__main__' == __name__:
